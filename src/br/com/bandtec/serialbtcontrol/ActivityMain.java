@@ -265,7 +265,7 @@ public final class ActivityMain extends ClientActivity implements MainHandler.Ca
 		SerializableMap opts = SerializableMap.deserialize(context, "_SerialBTControl");
 		if (opts == null)
 			opts = new SerializableMap();
-		forcedOrientation = opts.getInt(OPT_FORCEDORIENTATION, 1);
+		forcedOrientation = opts.getInt(OPT_FORCEDORIENTATION, UI.isLargeScreen ? -1 : 1);
 		recentlyUsedAddresses = new ArrayList<String>(5);
 		for (int i = OPT_LASTADDRESS0; i <= OPT_LASTADDRESS4; i++) {
 			final String addr = opts.getString(i, null);
