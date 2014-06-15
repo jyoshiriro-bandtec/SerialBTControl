@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="bt_error_dialog_message">Oh, no! It seems that your Bluetooth device is not switched on. Please make sure that your device is on and then try to connect again.</string>
+    <string name="pairing_message">Please, try to connect again after pairing the device.</string>
+    <string name="bt_needs_to_be_enabled">You need to enable Bluetooth first!"</string>
+    <string name="bt_initialization_failure">Bluetooth not supported!</string>
+    <string name="no_paired_nxt">No paired Bluetooth device robot found!</string>
+    <string name="problem_at_connecting">Problem in creating a connection!</string>
+    <string name="problem_at_closing">Problem in closing the connection!</string>
+    <string name="problem_at_sending">Problem in sending a message!</string>
+    <string name="problem_at_receiving">Problem in receiving a message!</string>
+    <string name="devices">Dispositivos Bluetooth</string>
+    <string name="connecting_please_wait">Connecting to your Bluetooth device. Please wait&#8230;</string>
+    <string name="scanning">Scanning area for Bluetooth devices&#8230;</string>
+    <string name="none_paired">No Bluetooth devices were paired!</string>
+    <string name="none_found">No Bluetooth devices were found!</string>
+    <string name="scan_again">Scan for devices again&#8230; :)</string>
+    <string name="app_description">Remote control for Bluetooth devices via Serial Port Profile (SPP)</string>
+    <string name="app_more_info">Looking for more info?\nMaybe the source code?\nHave a request?\nFound a bug?!?\nJust want to get in touch? :)\n\nDrop me an e-mail:\ncarlos.rafael@bandtec.com.br\nor visit the application\'s project site on GitHub:\nhttps://github.com/BandTec/SerialBTControl\n\nThis project is based on the following open source projects:\n\nLEGO-MINDSTORMS-MINDdroid\nhttps://github.com/NXT/LEGO-MINDSTORMS-MINDdroid\n\nFPlayAndroid\nhttps://github.com/carlosrafaelgn/FPlayAndroid\n\nThe font used to draw the scalable icons, icons.ttf, was created using IcoMoon App, by Keyamoon, available at:\nhttp://icomoon.io/app\n\nSome of the scalable icons were created by me and some came from the IcoMoon Free icon set, by Keyamoon, licensed under the Creative Commons License 3.0.\n\nSerial BT Control is licensed under the terms of the GPLv3. See http://gplv3.fsf.org for more details.</string>
+    <string name="got_it">Got it!</string>
+    <string name="connected">Connected!</string>
+    <string name="go_back">Return</string>
+    <string name="error">Error:</string>
+    <string name="oops">Oops&#8230;</string>
+    <string name="null_device_name">[BT Device]</string>
+    <string name="refresh_list">Refresh list</string>
+    <string name="empty_list">[Empty]</string>
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+    <string name="about">About</string>
+    <string name="exit">Exit</string>
+
+</resources>
