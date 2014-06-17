@@ -55,7 +55,7 @@ public final class ActivityMain extends ClientActivity implements MainHandler.Ca
 	private ProgressDialog connectingProgressDialog;
 	private CharSequence lastError;
 	private int forcedOrientation, lastDir;
-	private BgButton btnExit, btnPortrait, btnLandscape, btnAbout, btnScanAgain;
+	private BgButton btnExit, btnOrientation, btnAbout, btnScanAgain;
 	private BgButton[] btns;
 	private BgDirControl dirControl;
 	private ArrayList<String> recentlyUsedAddresses; 
@@ -173,12 +173,14 @@ public final class ActivityMain extends ClientActivity implements MainHandler.Ca
 	public void onClick(View view) {
 		if (view == btnExit) {
 			finish();
-		} else if (view == btnPortrait) {
-			forcedOrientation = 1;
-			getHostActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		} else if (view == btnLandscape) {
-			forcedOrientation = -1;
-			getHostActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else if (view == btnOrientation) {
+			if (forcedOrientation > 0) {
+				forcedOrientation = -1;
+				getHostActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			} else {
+				forcedOrientation = 1;
+				getHostActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			}
 		} else if (view == btnAbout) {
 			startActivity(new ActivityAbout());
 		} else if (view == btnScanAgain) {
@@ -303,15 +305,12 @@ public final class ActivityMain extends ClientActivity implements MainHandler.Ca
 		setContentView(UI.isLandscape ? R.layout.activity_main_l : R.layout.activity_main);
 		btnExit = (BgButton)findViewById(R.id.btnExit);
 		btnExit.setOnClickListener(this);
-		btnPortrait = (BgButton)findViewById(R.id.btnPortrait);
-		btnPortrait.setOnClickListener(this);
-		btnLandscape = (BgButton)findViewById(R.id.btnLandscape);
-		btnLandscape.setOnClickListener(this);
+		btnOrientation = (BgButton)findViewById(R.id.btnOrientation);
+		btnOrientation.setOnClickListener(this);
 		btnAbout = (BgButton)findViewById(R.id.btnAbout);
 		btnAbout.setOnClickListener(this);
 		btnExit.setIcon(UI.ICON_EXIT);
-		btnPortrait.setIcon(UI.ICON_PORTRAIT);
-		btnLandscape.setIcon(UI.ICON_LANDSCAPE);
+		btnOrientation.setIcon(UI.ICON_ORIENTATION);
 		btnAbout.setIcon(UI.ICON_INFO);
 		btnScanAgain = (BgButton)findViewById(R.id.btnScanAgain);
 		btnScanAgain.setOnClickListener(this);
@@ -362,8 +361,7 @@ public final class ActivityMain extends ClientActivity implements MainHandler.Ca
 	@Override
 	protected void onCleanupLayout() {
 		btnExit = null;
-		btnPortrait = null;
-		btnLandscape = null;
+		btnOrientation = null;
 		btnAbout = null;
 		btnScanAgain = null;
 		if (dirControl != null) {

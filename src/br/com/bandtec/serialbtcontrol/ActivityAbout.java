@@ -23,6 +23,7 @@ import android.content.pm.PackageInfo;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import br.com.bandtec.serialbtcontrol.activity.ClientActivity;
 import br.com.bandtec.serialbtcontrol.ui.BgButton;
@@ -30,6 +31,7 @@ import br.com.bandtec.serialbtcontrol.ui.UI;
 import br.com.bandtec.serialbtcontrol.ui.drawable.BorderDrawable;
 
 public final class ActivityAbout extends ClientActivity implements View.OnClickListener {
+	private ScrollView list;
 	private BgButton btnGoBack;
 	
 	@SuppressWarnings("deprecation")
@@ -39,11 +41,19 @@ public final class ActivityAbout extends ClientActivity implements View.OnClickL
 		btnGoBack = (BgButton)findViewById(R.id.btnGoBack);
 		btnGoBack.setOnClickListener(this);
 		btnGoBack.setIcon(UI.ICON_GOBACK);
-		findViewById(R.id.list).setBackgroundDrawable(new BorderDrawable(0, UI.thickDividerSize, 0, 0));
-		((TextView)findViewById(R.id.lblTitle)).setText("Serial BT Control");
+		list = (ScrollView)findViewById(R.id.list);
+		list.setHorizontalFadingEdgeEnabled(false);
+		list.setVerticalFadingEdgeEnabled(false);
+		list.setFadingEdgeLength(0);
+		list.setBackgroundDrawable(new BorderDrawable(0, UI.thickDividerSize, 0, 0));
+		final TextView lblTitle = (TextView)findViewById(R.id.lblTitle);
+		lblTitle.setText("Serial BT Control");
+		UI.largeTextAndColor(lblTitle);
+		final TextView lblVersion = (TextView)findViewById(R.id.lblVersion);
+		UI.smallTextAndColor(lblVersion);
 		try {
 			final PackageInfo inf = getApplication().getPackageManager().getPackageInfo(getApplication().getPackageName(), 0);
-			((TextView)findViewById(R.id.lblVersion)).setText("v" + inf.versionName);
+			lblVersion.setText("v" + inf.versionName);
 		} catch (Throwable e) {
 		}
 		final TextView lblMsg = (TextView)findViewById(R.id.lblMsg);
@@ -54,14 +64,22 @@ public final class ActivityAbout extends ClientActivity implements View.OnClickL
 		lblMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, UI._14sp);
 		if (UI.isLowDpiScreen) {
 			findViewById(R.id.panelControls).setPadding(0, 0, 0, 0);
-			findViewById(R.id.panelMsg).setPadding(UI._8dp, UI._8dp, UI._8dp, UI._8dp);
+			findViewById(R.id.panelMsg).setPadding(0, 0, 0, 0);
 		} else if (UI.isLargeScreen) {
+			UI.prepareViewPaddingForLargeScreen(list, 0);
 			lblMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, UI._18sp);
 		}
 	}
 	
 	@Override
+	protected void onOrientationChanged() {
+		if (UI.isLargeScreen && list != null)
+			UI.prepareViewPaddingForLargeScreen(list, 0);
+	}
+	
+	@Override
 	protected void onCleanupLayout() {
+		list = null;
 		btnGoBack = null;
 	}
 	

@@ -107,12 +107,12 @@ public final class UI {
 	public static final int color_menu_border = color_selected_border;
 	
 	public static final String ICON_EXIT = "X";
-	public static final String ICON_MENU = "M";
-	public static final String ICON_PORTRAIT = "P";
-	public static final String ICON_LANDSCAPE = "L";
-	public static final String ICON_GOBACK = "B";
+	public static final String ICON_MENU = "N";
+	public static final String ICON_ORIENTATION = "O";
+	public static final String ICON_GOBACK = "_";
 	public static final String ICON_INFO = "I";
 	public static final String ICON_REFRESH = "R";
+	public static final String ICON_SETTINGS = "s";
 	public static final String ICON_OPTCHK = "q";
 	public static final String ICON_OPTUNCHK = "Q";
 	

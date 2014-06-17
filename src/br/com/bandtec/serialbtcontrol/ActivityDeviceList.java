@@ -31,6 +31,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import br.com.bandtec.serialbtcontrol.activity.ClientActivity;
 import br.com.bandtec.serialbtcontrol.list.BaseList;
 import br.com.bandtec.serialbtcontrol.list.DeviceItem;
@@ -44,8 +45,9 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 	public static final String PAIRING = "pairing";
 	public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 	private BluetoothAdapter btAdapter;
-	private BgButton btnRefresh;
+	private BgButton btnGoBack, btnRefresh;
 	private BaseList<DeviceItem> deviceList;
+	private LinearLayout panelScanning;
 	private BroadcastReceiver receiver;
 	private ArrayList<String> recentlyUsedAddresses;
 	
@@ -63,9 +65,10 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 	@Override
 	protected void onCreate() {
 		setContentView(R.layout.activity_device_list);
-		
 		((BgTextView)findViewById(R.id.txtDevices)).setTextColor(UI.colorState_text_title_static);
-		
+		btnGoBack = (BgButton)findViewById(R.id.btnGoBack);
+		btnGoBack.setOnClickListener(this);
+		btnGoBack.setIcon(UI.ICON_GOBACK);
 		final BgListView list = (BgListView)findViewById(R.id.list);
 		deviceList = new BaseList<DeviceItem>(DeviceItem.class);
 		deviceList.setObserver(list);
@@ -73,9 +76,13 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 		btnRefresh = (BgButton)findViewById(R.id.btnRefresh);
 		btnRefresh.setOnClickListener(this);
 		btnRefresh.setIcon(UI.ICON_REFRESH);
+		panelScanning = (LinearLayout)findViewById(R.id.panelScanning);
 		if (UI.isLowDpiScreen) {
-			findViewById(R.id.panelControls).setPadding(UI._8dp, 0, 0, 0);
-			findViewById(R.id.panelScanning).setPadding(UI._8dp, UI._8dp, UI._8dp, UI._8dp);
+			findViewById(R.id.panelControls).setPadding(0, 0, 0, 0);
+			panelScanning.setPadding(0, 0, 0, 0);
+		} else if (UI.isLargeScreen) {
+			UI.prepareViewPaddingForLargeScreen(list, 0);
+			UI.prepareViewPaddingForLargeScreen(panelScanning, 0);
 		}
 		
 		receiver = new BroadcastReceiver() {
@@ -103,7 +110,8 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 				} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 					if (btnRefresh != null)
 						btnRefresh.setVisibility(View.VISIBLE);
-					findViewById(R.id.panelScanning).setVisibility(View.GONE);
+					if (panelScanning != null)
+						panelScanning.setVisibility(View.GONE);
 					if (deviceList.getCount() == 0)
 						deviceList.add(new DeviceItem(getText(R.string.none_found).toString(), null, false, false), -1);
 				}
@@ -129,6 +137,7 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 	
 	@Override
 	protected void onDestroy() {
+		btnGoBack = null;
 		btnRefresh = null;
 		if (btAdapter != null) {
 			btAdapter.cancelDiscovery();
@@ -147,14 +156,16 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 	
 	@Override
 	public void onClick(View view) {
-		if (view == btnRefresh) {
+		if (view == btnGoBack) {
+			finish();
+		} else if (view == btnRefresh) {
 	        if (btAdapter == null)
 	        	return;
 			if (btAdapter.isDiscovering())
 	        	btAdapter.cancelDiscovery();
 	        btAdapter.startDiscovery();
 			btnRefresh.setVisibility(View.GONE);
-			findViewById(R.id.panelScanning).setVisibility(View.VISIBLE);
+			panelScanning.setVisibility(View.VISIBLE);
 		}
 	}
 	

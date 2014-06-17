@@ -11,14 +11,24 @@
         android:id="@+id/panelControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp" >
+        android:padding="8dp" >
+
+        <br.com.bandtec.serialbtcontrol.ui.BgButton
+            android:id="@+id/btnGoBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:contentDescription="@string/go_back" />
 
         <br.com.bandtec.serialbtcontrol.ui.BgTextView
             android:id="@+id/txtDevices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btnRefresh"
+            android:layout_toRightOf="@+id/btnGoBack"
             android:text="@string/devices"
             android:textAppearance="@style/LargeText" />
 
@@ -47,7 +57,7 @@
         android:layout_height="wrap_content"
         android:baselineAligned="false"
         android:orientation="vertical"
-        android:padding="16dp" >
+        android:padding="8dp" >
 
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"

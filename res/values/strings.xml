@@ -26,8 +26,7 @@
     <string name="null_device_name">[BT Device]</string>
     <string name="refresh_list">Refresh list</string>
     <string name="empty_list">[Empty]</string>
-    <string name="portrait">Portrait</string>
-    <string name="landscape">Landscape</string>
+    <string name="orientation">Switch orientation</string>
     <string name="about">About</string>
     <string name="exit">Exit</string>
 

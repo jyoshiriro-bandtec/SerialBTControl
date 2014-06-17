@@ -26,8 +26,7 @@
     <string name="null_device_name">[Dispositivo BT]</string>
     <string name="refresh_list">Atualizar lista</string>
     <string name="empty_list">[Vazio]</string>
-    <string name="portrait">Retrato</string>
-    <string name="landscape">Paisagem</string>
+    <string name="orientation">Alternar orientação</string>
     <string name="about">Sobre</string>
     <string name="exit">Sair</string>
 

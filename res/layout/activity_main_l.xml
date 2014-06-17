@@ -10,9 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp" >
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp" >
 
         <br.com.bandtec.serialbtcontrol.ui.BgButton
             android:id="@+id/btnExit"
@@ -22,19 +22,11 @@
             android:contentDescription="@string/exit" />
 
         <br.com.bandtec.serialbtcontrol.ui.BgButton
-            android:id="@+id/btnPortrait"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btnLandscape"
-            android:contentDescription="@string/portrait" />
-
-        <br.com.bandtec.serialbtcontrol.ui.BgButton
-            android:id="@+id/btnLandscape"
+            android:id="@+id/btnOrientation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/btnAbout"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/landscape" />
+            android:contentDescription="@string/orientation" />
 
         <br.com.bandtec.serialbtcontrol.ui.BgButton
             android:id="@+id/btnAbout"
