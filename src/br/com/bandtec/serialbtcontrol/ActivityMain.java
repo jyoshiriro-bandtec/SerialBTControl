@@ -350,6 +350,7 @@ public final class ActivityMain extends ClientActivity implements MainHandler.Ca
 		}
 		if (lastError != null)
 			showError(lastError, lastBtnScanAgainVisibility);
+		UI.prepareEdgeEffectColor(getApplication());
 	}
 	
 	@Override

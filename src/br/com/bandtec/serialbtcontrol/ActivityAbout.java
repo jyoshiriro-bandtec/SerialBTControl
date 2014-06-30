@@ -45,7 +45,7 @@ public final class ActivityAbout extends ClientActivity implements View.OnClickL
 		list.setHorizontalFadingEdgeEnabled(false);
 		list.setVerticalFadingEdgeEnabled(false);
 		list.setFadingEdgeLength(0);
-		list.setBackgroundDrawable(new BorderDrawable(0, UI.thickDividerSize, 0, 0));
+		list.setBackgroundDrawable(new BorderDrawable(UI.color_highlight, UI.color_list, 0, UI.thickDividerSize, 0, 0));
 		final TextView lblTitle = (TextView)findViewById(R.id.lblTitle);
 		lblTitle.setText("Serial BT Control");
 		UI.largeTextAndColor(lblTitle);
@@ -69,6 +69,7 @@ public final class ActivityAbout extends ClientActivity implements View.OnClickL
 			UI.prepareViewPaddingForLargeScreen(list, 0);
 			lblMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, UI._18sp);
 		}
+		UI.prepareEdgeEffectColor(getApplication());
 	}
 	
 	@Override

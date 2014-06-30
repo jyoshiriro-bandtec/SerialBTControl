@@ -1,7 +1,7 @@
 //
 // FPlayAndroid is distributed under the FreeBSD License
 //
-// Copyright (c) 2013, Carlos Rafael Gimenes das Neves
+// Copyright (c) 2013-2014, Carlos Rafael Gimenes das Neves
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -42,9 +42,11 @@ import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -105,6 +107,7 @@ public final class UI {
 	public static final int color_focused_pressed_border = color_focused_border;
 	public static final int color_text_title = color_highlight;
 	public static final int color_menu_border = color_selected_border;
+	public static final int color_glow = color_selected_grad_lt;
 	
 	public static final String ICON_EXIT = "X";
 	public static final String ICON_MENU = "N";
@@ -181,8 +184,10 @@ public final class UI {
 			//http://developer.android.com/guide/practices/screens_support.html#DeclaringTabletLayouts
 			//(There is also the solution at http://stackoverflow.com/questions/11330363/how-to-detect-device-is-android-phone-or-android-tablet
 			//but the former link says it is deprecated...)
-			final int _600dp = (int)((600.0f * displayMetrics.density) + 0.5f);
-			isLargeScreen = ((screenWidth >= _600dp) && (screenHeight >= _600dp));
+			//*** I decided to treat screens >= 500dp as large screens because there are
+			//lots of 7" phones/tablets with resolutions starting at around 533dp ***
+			final int _500dp = (int)((500.0f * displayMetrics.density) + 0.5f);
+			isLargeScreen = ((screenWidth >= _500dp) && (screenHeight >= _500dp));
 			isLandscape = (screenWidth >= screenHeight);
 			isLowDpiScreen = (displayMetrics.densityDpi < 160);
 		}
@@ -556,9 +561,14 @@ public final class UI {
 		view.setTypeface(defaultTypeface);
 	}
 	
-	public static void prepareViewPaddingForLargeScreen(View view, int extraBottomPadding) {
+	public static void prepareViewPaddingForLargeScreen(View view, int bottomPadding) {
 		final int p = ((usableScreenWidth < usableScreenHeight) ? usableScreenWidth : usableScreenHeight) / (isLandscape ? 5 : 10);
-		view.setPadding(p, thickDividerSize, p, extraBottomPadding);
+		view.setPadding(p, thickDividerSize, p, bottomPadding);
+	}
+	
+	public static void prepareViewPaddingForLargeScreen(View view, int topPadding, int bottomPadding) {
+		final int p = ((usableScreenWidth < usableScreenHeight) ? usableScreenWidth : usableScreenHeight) / (isLandscape ? 5 : 10);
+		view.setPadding(p, topPadding, p, bottomPadding);
 	}
 	
 	public static void toast(Context context, Throwable ex) {
@@ -618,5 +628,27 @@ public final class UI {
 	public static void setNextFocusForwardId(View view, int nextFocusForwardId) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			view.setNextFocusForwardId(nextFocusForwardId);
+	}
+	
+	public static void prepareEdgeEffectColor(Context context) {
+		//
+		//:D amazing hack/workaround, as explained here:
+		//
+		//http://evendanan.net/android/branding/2013/12/09/branding-edge-effect/
+		Drawable glow, edge;
+		try {
+			glow = context.getResources().getDrawable(context.getResources().getIdentifier("overscroll_glow", "drawable", "android"));
+			if (glow != null)
+				//the color is treated as SRC, and the bitmap is treated as DST
+				glow.setColorFilter(color_glow, PorterDuff.Mode.SRC_IN);
+		} catch (Throwable ex) {
+		}
+		try {
+			edge = context.getResources().getDrawable(context.getResources().getIdentifier("overscroll_edge", "drawable", "android"));
+			if (edge != null)
+				//hide the edge!!! ;)
+				edge.setColorFilter(0, PorterDuff.Mode.CLEAR);
+		} catch (Throwable ex) {
+		}
 	}
 }

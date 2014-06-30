@@ -49,18 +49,20 @@ import br.com.bandtec.serialbtcontrol.util.ArraySorter.Comparer;
 //SINCE ALL CALLS MADE BY Player ARE MADE ON THE MAIN THREAD, THERE IS NO
 //NEED TO SYNCHRONIZE THE ACCESS TO THE ITEMS
 //
-public class BaseList<E extends BaseItem> implements ListAdapter {
-	private static final int LIST_DELTA = 32;
+public final class BaseList<E extends BaseItem> implements ListAdapter {
+	protected static final int LIST_DELTA = 32;
 	
 	protected static final int SELECTION_CHANGED = 0;
-	protected static final int CONTENTS_CHANGED = 1;
-	protected static final int LIST_CLEARED = 2;
+	protected static final int LIST_CLEARED = 1;
+	protected static final int CONTENT_MOVED = 2;
+	protected static final int CONTENT_ADDED = 3;
+	protected static final int CONTENT_REMOVED = 4;
 	
 	protected BgListView listObserver;
 	protected DataSetObserver observer;
 	protected final Object sync;
 	protected E[] items;
-	protected int count, current, firstSel, lastSel, originalSel, lastDeleted, modificationVersion;
+	protected int count, current, firstSel, lastSel, originalSel, indexOfPreviouslyDeletedCurrentItem, modificationVersion;
 	
 	@SuppressWarnings("unchecked")
 	public BaseList(Class<E> c) {
@@ -70,21 +72,18 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 		this.firstSel = -1;
 		this.lastSel = -1;
 		this.originalSel = -1;
-		this.lastDeleted = -1;
+		this.indexOfPreviouslyDeletedCurrentItem = -1;
 	}
 	
+	protected void addingItems(int position, int count) { }
+	
+	protected void removingItems(int position, int count) { }
+	
+	protected void clearingItems() { }
+	
 	private void setCapacity(int capacity) {
-		if (capacity < count)
-			return;
-		
-		if (capacity > items.length ||
-			capacity <= (items.length - (2 * LIST_DELTA))) {
-			capacity += LIST_DELTA;
-		} else {
-			return;
-		}
-		
-		items = Arrays.copyOf(items, capacity);
+		if (capacity >= count && (capacity > items.length || capacity <= (items.length - (2 * LIST_DELTA))))
+			items = Arrays.copyOf(items, capacity + LIST_DELTA);
 	}
 	
 	public final void add(E item, int position) {
@@ -110,9 +109,10 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 				firstSel++;
 			if (lastSel >= position)
 				lastSel++;
+			addingItems(position, 1);
 		//}
 		
-		notifyDataSetChanged(-1, CONTENTS_CHANGED);
+		notifyDataSetChanged(-1, CONTENT_ADDED);
 	}
 	
 	public final void add(E[] items, int position, int count) {
@@ -140,13 +140,16 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 				lastSel += count;
 			if (originalSel >= position)
 				originalSel += count;
+			addingItems(position, count);
 		//}
 		
-		notifyDataSetChanged(-1, CONTENTS_CHANGED);
+		notifyDataSetChanged(-1, CONTENT_ADDED);
 	}	
 	
 	public final void clear() {
 		//synchronized (sync) {
+			clearingItems();
+			
 			modificationVersion++;
 			for (int i = items.length - 1; i >= 0; i--)
 				items[i] = null;
@@ -155,7 +158,7 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 			firstSel = -1;
 			lastSel = -1;
 			originalSel = -1;
-			lastDeleted = -1;
+			indexOfPreviouslyDeletedCurrentItem = -1;
 		//}
 		notifyDataSetChanged(-1, LIST_CLEARED);
 	}
@@ -174,16 +177,27 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 			setSelection(firstSel, firstSel, false, false);
 		
 		//synchronized (sync) {
+			removingItems(position, count);
+			
 			modificationVersion++;
-			final int tot = position + count;
-			for (int i = position; i < tot; i++)
-				items[i] = null;
 			
 			System.arraycopy(items, position + count, items, position, (this.count - position - count));
+			
+			final int oldCount = this.count;
 			this.count -= count;
-			lastDeleted = -1;
+			for (int i = this.count; i < oldCount; i++)
+				items[i] = null;
+			
+			if (indexOfPreviouslyDeletedCurrentItem >= 0) {
+				if (indexOfPreviouslyDeletedCurrentItem >= position && indexOfPreviouslyDeletedCurrentItem < (position + count))
+					indexOfPreviouslyDeletedCurrentItem = position;
+				else if (indexOfPreviouslyDeletedCurrentItem > position)
+					indexOfPreviouslyDeletedCurrentItem -= count;
+				if (indexOfPreviouslyDeletedCurrentItem >= this.count)
+					indexOfPreviouslyDeletedCurrentItem = -1;
+			}
 			if (current >= position && current < (position + count)) {
-				lastDeleted = position;
+				indexOfPreviouslyDeletedCurrentItem = position;
 				current = -1;
 			} else if (current > position) {
 				current -= count;
@@ -204,7 +218,7 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 		//}
 		setCapacity(this.count);
 		
-		notifyDataSetChanged(originalSel, CONTENTS_CHANGED);
+		notifyDataSetChanged(originalSel, CONTENT_REMOVED);
 		
 		return true;
 	}
@@ -217,9 +231,9 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 			firstSel = -1;
 			lastSel = -1;
 			originalSel = -1;
-			lastDeleted = -1;
+			indexOfPreviouslyDeletedCurrentItem = -1;
 		//}
-		notifyDataSetChanged(-1, CONTENTS_CHANGED);
+		notifyDataSetChanged(-1, CONTENT_MOVED);
 	}
 	
 	public final void moveSelection(int to) {
@@ -265,7 +279,7 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 			lastSel += delta;
 			originalSel = to;
 		//}
-		notifyDataSetChanged(-1, CONTENTS_CHANGED);
+		notifyDataSetChanged(-1, CONTENT_MOVED);
 	}
 	
 	public final int getSelection() {
@@ -325,6 +339,22 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 		}
 		if (notifyChanged)
 			notifyDataSetChanged(byUserInteraction ? -1 : gotoPosition, SELECTION_CHANGED);
+	}
+	
+	public final int indexOf(E item) {
+		for (int i = 0; i < count; i++) {
+			if (items[i] == item)
+				return i;
+		}
+		return -1;
+	}
+	
+	public final int lastIndexOf(E item) {
+		for (int i = count - 1; i >= 0; i--) {
+			if (items[i] == item)
+				return i;
+		}
+		return -1;
 	}
 	
 	@Override
@@ -401,6 +431,10 @@ public class BaseList<E extends BaseItem> implements ListAdapter {
 			observer.onChanged();
 		if (listObserver != null && gotoPosition >= 0)
 			listObserver.centerItem(gotoPosition, false);
+	}
+	
+	public void notifyCheckedChanged() {
+		notifyDataSetChanged(-1, SELECTION_CHANGED);
 	}
 	
 	protected final int getItemState(int position) {

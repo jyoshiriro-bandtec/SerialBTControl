@@ -118,6 +118,8 @@ public class ActivityDeviceList extends ClientActivity implements AdapterView.On
 			}
 		};
 		
+		UI.prepareEdgeEffectColor(getApplication());
+		
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		getHostActivity().registerReceiver(receiver, filter);
 		filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);

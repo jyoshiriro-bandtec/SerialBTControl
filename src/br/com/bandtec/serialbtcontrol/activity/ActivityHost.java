@@ -184,7 +184,7 @@ public final class ActivityHost extends Activity {
 		//that's why we pass null to super.onCreate!
 		super.onCreate(null);
 		setupActionBar();
-		UI.initialize(this);
+		UI.initialize(getApplication());
 		MainHandler.initialize(getApplication());
 		top = new ActivityMain();
 		top.finished = false;
@@ -219,9 +219,9 @@ public final class ActivityHost extends Activity {
 	
 	@Override
 	protected void onPause() {
-		super.onPause();
 		if (top != null)
 			top.onPause();
+		super.onPause();
 	}
 	
 	@Override
