@@ -43,6 +43,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -77,6 +78,16 @@ public final class UI {
 	public static final int STATE_MULTISELECTED = 16;
 	public static final int STATE_CHECKED = 32;
 	
+	public static final String ICON_EXIT = "X";
+	public static final String ICON_MENU = "N";
+	public static final String ICON_ORIENTATION = "O";
+	public static final String ICON_GOBACK = "_";
+	public static final String ICON_INFO = "I";
+	public static final String ICON_REFRESH = "R";
+	public static final String ICON_SETTINGS = "s";
+	public static final String ICON_OPTCHK = "q";
+	public static final String ICON_OPTUNCHK = "Q";
+	
 	public static final int color_window = 0xff303030;
 	public static final int color_control_mode = 0xff000000;
 	public static final int color_visualizer = 0xff000000;
@@ -107,18 +118,8 @@ public final class UI {
 	public static final int color_focused_pressed_border = color_focused_border;
 	public static final int color_text_title = color_highlight;
 	public static final int color_menu_border = color_selected_border;
-	public static final int color_glow = color_selected_grad_lt;
-	
-	public static final String ICON_EXIT = "X";
-	public static final String ICON_MENU = "N";
-	public static final String ICON_ORIENTATION = "O";
-	public static final String ICON_GOBACK = "_";
-	public static final String ICON_INFO = "I";
-	public static final String ICON_REFRESH = "R";
-	public static final String ICON_SETTINGS = "s";
-	public static final String ICON_OPTCHK = "q";
-	public static final String ICON_OPTUNCHK = "Q";
-	
+	public static final int color_glow_dk = 0xff686868;
+	public static final int color_glow_lt = 0xffffffff;
 	public static final ColorStateList colorState_text_white_reactive = new ColorStateList(new int[][] { new int[] { android.R.attr.state_pressed }, new int[] { android.R.attr.state_focused }, new int[] {} }, new int[] { color_text_selected, color_text_selected, 0xffffffff });
 	public static final ColorStateList colorState_text_menu_reactive = new ColorStateList(new int[][] { new int[] { android.R.attr.state_pressed }, new int[] { android.R.attr.state_focused }, new int[] {} }, new int[] { color_text_selected, color_text_selected, color_text_menu });
 	public static final ColorStateList colorState_text_reactive = new ColorStateList(new int[][] { new int[] { android.R.attr.state_pressed }, new int[] { android.R.attr.state_focused }, new int[] {} }, new int[] { color_text_selected, color_text_selected, color_text });
@@ -240,6 +241,8 @@ public final class UI {
 	
 	public static final Paint fillPaint;
 	public static final TextPaint textPaint;
+	private static final PorterDuffColorFilter glowFilter;
+	private static final PorterDuffColorFilter edgeFilter;
 	
 	static {
 		fillPaint = new Paint();
@@ -254,6 +257,10 @@ public final class UI {
 		textPaint.setTextAlign(Paint.Align.LEFT);
 		textPaint.setColor(color_text);
 		textPaint.measureText("SerialBTControl");
+		//the color is treated as SRC, and the bitmap is treated as DST
+		glowFilter = new PorterDuffColorFilter(color_glow_lt, PorterDuff.Mode.SRC_IN);
+		//hide the edge!!! ;)
+		edgeFilter = new PorterDuffColorFilter(0, PorterDuff.Mode.CLEAR);
 	}
 	
 	public static String formatIntAsFloat(int number, boolean useTwoDecimalPlaces, boolean removeDecimalPlacesIfExact) {
@@ -640,14 +647,14 @@ public final class UI {
 			glow = context.getResources().getDrawable(context.getResources().getIdentifier("overscroll_glow", "drawable", "android"));
 			if (glow != null)
 				//the color is treated as SRC, and the bitmap is treated as DST
-				glow.setColorFilter(color_glow, PorterDuff.Mode.SRC_IN);
+				glow.setColorFilter(glowFilter);
 		} catch (Throwable ex) {
 		}
 		try {
 			edge = context.getResources().getDrawable(context.getResources().getIdentifier("overscroll_edge", "drawable", "android"));
 			if (edge != null)
 				//hide the edge!!! ;)
-				edge.setColorFilter(0, PorterDuff.Mode.CLEAR);
+				edge.setColorFilter(edgeFilter);
 		} catch (Throwable ex) {
 		}
 	}
