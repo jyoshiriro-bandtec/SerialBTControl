@@ -35,7 +35,6 @@ package br.com.bandtec.serialbtcontrol.activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -135,10 +134,6 @@ public abstract class ClientActivity implements MenuItem.OnMenuItemClickListener
 	
 	public final Resources getResources() {
 		return activity.getResources();
-	}
-	
-	public final Drawable getDrawable(int resId) {
-		return activity.getResources().getDrawable(resId);
 	}
 	
 	public void activityFinished(ClientActivity activity, int requestCode, int resultCode, Intent data) {

@@ -185,7 +185,7 @@ public final class ActivityHost extends Activity {
 		super.onCreate(null);
 		setupActionBar();
 		UI.initialize(getApplication());
-		MainHandler.initialize(getApplication());
+		MainHandler.initialize();
 		top = new ActivityMain();
 		top.finished = false;
 		top.activity = this;

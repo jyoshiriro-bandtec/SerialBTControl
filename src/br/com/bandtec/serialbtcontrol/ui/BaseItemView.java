@@ -128,7 +128,7 @@ public final class BaseItemView extends View {
 		getDrawingRect(UI.rect);
 		if (state == UI.STATE_CURRENT)
 			canvas.drawColor(UI.color_highlight);
-		UI.drawBg(canvas, state, UI.rect, false, true);
+		UI.drawBg(canvas, state, false, true);
 		UI.drawText(canvas, ellipsizedText, txtColor, UI._22sp, UI._8dp, (UI.defaultControlSize >> 1) - (UI._22spBox >> 1) + UI._22spYinBox);
 	}
 }

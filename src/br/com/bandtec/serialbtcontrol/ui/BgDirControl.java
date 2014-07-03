@@ -296,13 +296,13 @@ public final class BgDirControl extends View {
 		for (int i = 1; i <= 7; i += 3) {
 			UI.rect.left = offX;
 			UI.rect.right = offX + w3;
-			UI.drawBg(canvas, state | ((dir == i) ? UI.STATE_FOCUSED : UI.STATE_SELECTED), UI.rect, true, false);
+			UI.drawBg(canvas, state | ((dir == i) ? UI.STATE_FOCUSED : UI.STATE_SELECTED), true, false);
 			UI.rect.left += w3;
 			UI.rect.right += w3;
-			UI.drawBg(canvas, state | ((dir == (i + 1)) ? UI.STATE_FOCUSED : UI.STATE_SELECTED), UI.rect, true, false);
+			UI.drawBg(canvas, state | ((dir == (i + 1)) ? UI.STATE_FOCUSED : UI.STATE_SELECTED), true, false);
 			UI.rect.left += w3;
 			UI.rect.right += w3;
-			UI.drawBg(canvas, state | ((dir == (i + 2)) ? UI.STATE_FOCUSED : UI.STATE_SELECTED), UI.rect, true, false);
+			UI.drawBg(canvas, state | ((dir == (i + 2)) ? UI.STATE_FOCUSED : UI.STATE_SELECTED), true, false);
 			if (i != 7)
 				canvas.translate(0, h3);
 		}
