@@ -9,4 +9,6 @@ LEGO-MINDSTORMS-MINDdroid, available at: https://github.com/NXT/LEGO-MINDSTORMS-
 
 FPlayAndroid, available at: https://github.com/carlosrafaelgn/FPlayAndroid
 
-This projected is licensed under the terms of the GPLv3. See LICENSE.txt for more details.
+---
+
+This project is licensed under the terms of the GPLv3. See LICENSE.txt for more details.
